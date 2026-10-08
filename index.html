@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Super El Niño of 2026–27 — an interactive playground</title>
+  <meta name="description" content="Play with the Pacific: a hands-on guide to the record-breaking 2026–27 El Niño — how it works, how it grew, how it compares, and where it lands.">
+  <meta name="theme-color" content="#060d1b">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=3">
+</head>
+<body>
+  <a class="skip" href="#machine">Skip to the playground</a>
+
+  <header class="nav" id="nav">
+    <a class="brand" href="#top" aria-label="Back to top">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>El Niño <b>26/27</b></span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#machine">The machine</a>
+      <a href="#growth">The build-up</a>
+      <a href="#compare">The record</a>
+      <a href="#impacts">The fallout</a>
+    </nav>
+    <a class="nav-chip" href="#growth" title="Latest weekly reading, NOAA">
+      <span class="pulse" aria-hidden="true"></span>
+      Niño 3.4 <b id="navValue">+3.2°C</b>
+    </a>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="heroTitle">
+      <canvas id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <p class="eyebrow"><span class="dot"></span><span>Live event · data as of <span id="asOf">8 October 2026</span></span></p>
+        <h1 id="heroTitle">The Pacific is running <em>a fever.</em></h1>
+        <p class="lede">The 2026–27 El Niño has already broken the all-time record for warmth in the equatorial Pacific — and it has not peaked yet. This is a hands-on guide to what is happening, why, and where it lands. Drag things. Break things.</p>
+        <div class="hero-cta">
+          <a class="btn btn-hot" href="#machine">Start playing <span aria-hidden="true">↓</span></a>
+          <a class="btn btn-ghost" href="#impacts">Where will it hit?</a>
+        </div>
+        <dl class="hero-stats">
+          <div class="stat">
+            <dt>Niño 3.4, week of 30 Sep</dt>
+            <dd><span data-count="3.2" data-prefix="+" data-suffix="°C">+3.2°C</span></dd>
+            <p>Highest weekly reading in NOAA's record. The old high was +3.0°C, in November 2015.</p>
+          </div>
+          <div class="stat">
+            <dt>Off the coast of Peru</dt>
+            <dd><span data-count="5.3" data-prefix="+" data-suffix="°C">+5.3°C</span></dd>
+            <p>Sea surface anomaly in the Niño 1+2 region, where the warm water piles up.</p>
+          </div>
+          <div class="stat">
+            <dt>Odds of “historic” strength</dt>
+            <dd><span data-count="75" data-suffix="%" data-decimals="0">75%</span></dd>
+            <p>NOAA's chance that this beats every El Niño since 1950 on its official index.</p>
+          </div>
+          <div class="stat">
+            <dt>Forecast peak, Nov–Jan</dt>
+            <dd><span data-count="4.1" data-prefix="≈" data-suffix="°C">≈4.1°C</span></dd>
+            <p>Average of 674 runs from 14 forecast systems. Nearly every run beats the 2015–16 record.</p>
+          </div>
+        </dl>
+      </div>
+      <p class="hero-credit">Ocean heat drawn from NOAA's weekly regional readings · illustrative, not a satellite image</p>
+    </section>
+
+    <!-- 01 MACHINE: a pinned 3D stage with story chapters scrolling over it -->
+    <section class="m3" id="machine" aria-labelledby="machineTitle">
+      <div class="m3-stage" id="m3Stage">
+        <canvas id="m3Canvas" class="m3-canvas" aria-hidden="true"></canvas>
+        <canvas id="machineCanvas" class="m3-canvas" hidden role="img" aria-label="Cross-section of the equatorial Pacific showing winds, warm water, the thermocline, rainfall and upwelling."></canvas>
+        <div class="m3-labels" id="m3Labels" aria-hidden="true"></div>
+        <div class="m3-shade" aria-hidden="true"></div>
+
+        <div class="m3-hud" aria-live="polite">
+          <div class="m3-gauge">
+            <span class="r-label">Niño 3.4 anomaly</span>
+            <span class="m3-big" id="roAnom">0.0°C</span>
+            <span class="m3-class" id="roClass">Neutral</span>
+            <div class="m3-meter" aria-hidden="true">
+              <i class="m3-meter-zero"></i><i class="m3-meter-record" title="2015–16 record"></i><i class="m3-marker" id="m3Marker"></i>
+            </div>
+            <div class="m3-meter-legend" aria-hidden="true"><span>La Niña</span><span>Old record</span></div>
+          </div>
+          <dl class="m3-facts">
+            <div><dt>Trade winds</dt><dd id="machineWind">Normal</dd></div>
+            <div><dt>Warm pool reaches</dt><dd id="roPool">180°</dd></div>
+            <div><dt>Heaviest rain</dt><dd id="roRain">Indonesia</dd></div>
+            <div><dt>Upwelling off Peru</dt><dd id="roUp">100%</dd></div>
+          </dl>
+        </div>
+
+        <ol class="m3-progress" id="m3Progress" aria-label="Chapters"></ol>
+        <p class="m3-hint" aria-hidden="true"><span>Drag to look around</span></p>
+
+        <div class="m3-dock" id="m3Dock">
+          <p class="m3-dock-title"><b>Your turn.</b> Take the wind: slide it, jump to a state, or nudge it and let go.</p>
+          <div class="dial">
+            <label for="machineSlider"><span>Trade winds</span><span class="m3-dock-note" id="machineHint">Left for La Niña, right for El Niño</span></label>
+            <div class="range-wrap">
+              <input type="range" id="machineSlider" min="-2" max="4.3" step="0.05" value="0" aria-describedby="machineHint">
+              <div class="range-ticks" aria-hidden="true">
+                <span style="--p:0">Howling</span>
+                <span style="--p:31.7">Normal</span>
+                <span style="--p:100">Collapsed</span>
+              </div>
+            </div>
+          </div>
+          <div class="presets" role="group" aria-label="Jump to a state">
+            <button type="button" class="chip" data-machine="-1.5">La Niña</button>
+            <button type="button" class="chip" data-machine="0">Normal year</button>
+            <button type="button" class="chip" data-machine="2.0">2023–24</button>
+            <button type="button" class="chip chip-hot" data-machine="3.2">Right now</button>
+            <button type="button" class="chip chip-hot" data-machine="4.1">Forecast peak</button>
+            <button type="button" class="chip chip-ghost" id="machineFeedback" aria-pressed="false">▶ Nudge it &amp; let go</button>
+          </div>
+          <p class="m3-explain" id="machineExplain" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="m3-steps">
+        <article class="m3-step" data-step="intro" data-title="The machine" data-t0="0">
+          <div class="m3-card m3-card-intro">
+            <p class="kicker">01 · The machine</p>
+            <h2 id="machineTitle">El Niño is what happens when the wind lets go.</h2>
+            <p>This is a slice of the Pacific cut along the equator: Indonesia on the left, Peru on the right, nearly 18,000 km apart. Heights and depths are stretched so you can see inside.</p>
+            <p class="m3-cue"><span class="m3-cue-arrow" aria-hidden="true">↓</span> Scroll to run it <button type="button" class="m3-skip" data-m3-goto="play">or skip to the controls</button></p>
+          </div>
+        </article>
+
+        <article class="m3-step" data-step="wind" data-title="The wind" data-t0="0">
+          <div class="m3-card">
+            <p class="m3-num">1 · The wind</p>
+            <h3>Start with the wind.</h3>
+            <p>The <b>trade winds</b> blow west along the equator all year. They drag the sun-warmed surface water along with them, like breath across a bowl of soup.</p>
+          </div>
+        </article>
+
+        <article class="m3-step" data-step="warm" data-title="The warm pool" data-t0="0">
+          <div class="m3-card">
+            <p class="m3-num">2 · The warm pool</p>
+            <h3>Warm water piles up in the west.</h3>
+            <p>Off Indonesia the sea is close to 30°C and stands about half a metre higher than off Peru. All that warmth feeds towering storms — <b>this is where the Pacific's rain falls.</b></p>
+          </div>
+        </article>
+
+        <article class="m3-step" data-step="cold" data-title="The cold tongue" data-t0="0">
+          <div class="m3-card">
+            <p class="m3-num">3 · The cold tongue</p>
+            <h3>In the east, cold water rises to replace it.</h3>
+            <p>The dashed line is the <b>thermocline</b>, the boundary between warm surface water and the cold deep. It slopes up toward Peru, so cold, nutrient-rich water wells up there — and feeds the world's largest fishery by volume.</p>
+          </div>
+        </article>
+
+        <article class="m3-step" data-step="loop" data-title="The loop" data-t0="0">
+          <div class="m3-card">
+            <p class="m3-num">4 · The loop</p>
+            <h3>The air closes the loop.</h3>
+            <p>Air rises over the warm west, flows east high overhead, sinks over the cool east and blows back along the surface as the trade winds. <b>The wind builds the temperature contrast, and the contrast drives the wind.</b> It holds itself in place.</p>
+          </div>
+        </article>
+
+        <article class="m3-step" data-step="letgo" data-title="Letting go" data-t0="0" data-t1="1.7" data-from="0.2">
+          <div class="m3-card">
+            <p class="m3-num">5 · Letting go</p>
+            <h3>Now weaken the wind.</h3>
+            <p>A burst of westerly wind in the far west is enough. The warm water is no longer pinned, and it surges east as a wave <b>beneath</b> the surface, pushing the thermocline down as it goes. The crossing takes about two months.</p>
+          </div>
+        </article>
+
+        <article class="m3-step" data-step="runaway" data-title="The runaway" data-t0="1.7" data-t1="3.2" data-from="0.1">
+          <div class="m3-card">
+            <p class="m3-num">6 · The runaway</p>
+            <h3>Then the loop runs backwards.</h3>
+            <p>A warmer east means less contrast. Less contrast means weaker winds. Weaker winds let more warm water east. The rain follows the heat out to mid-ocean: <b>Indonesia dries and burns, Peru's desert coast floods,</b> and the upwelling shuts down.</p>
+          </div>
+        </article>
+
+        <article class="m3-step" data-step="now" data-title="2026" data-t0="3.2" data-t1="4.1" data-from="0.5">
+          <div class="m3-card m3-card-hot">
+            <p class="m3-num">7 · 2026</p>
+            <h3>This is the Pacific right now.</h3>
+            <p>Niño 3.4 is at <b>+3.2°C</b>, the highest weekly reading in NOAA's record. Keep scrolling to December: forecast models carry it to about <b>4.1°C</b>, a state no instrument has recorded.</p>
+          </div>
+        </article>
+
+        <article class="m3-step m3-step-play" data-step="play" data-title="Your turn" data-t0="4.1">
+          <h3 class="sr-only">Your turn: set the trade winds yourself with the controls below.</h3>
+        </article>
+      </div>
+    </section>
+
+    <!-- 02 GROWTH -->
+    <section class="section" id="growth" aria-labelledby="growthTitle">
+      <div class="section-head">
+        <p class="kicker">02 · The build-up</p>
+        <h2 id="growthTitle">In February, the odds of an El Niño by spring were put at 10%.</h2>
+        <p class="section-lede">Then the ocean warmed faster than in any El Niño on record. Scrub through 2026 week by week and watch the heat spread west from Peru. The four boxes are the regions NOAA measures; pick one to follow it on the chart.</p>
+      </div>
+
+      <div class="card growth">
+        <div class="growth-top">
+          <div class="map-wrap">
+            <canvas id="growthCanvas" aria-hidden="true"></canvas>
+            <svg id="growthSvg" role="img" aria-label="Map of the tropical Pacific showing sea surface temperature anomalies in NOAA's four Niño regions for the selected week"></svg>
+            <div class="map-date" aria-live="polite"><span id="growthDate">30 Sep 2026</span></div>
+            <div class="scale" aria-hidden="true">
+              <span>−2</span><i class="scale-bar"></i><span>+5°C</span>
+            </div>
+          </div>
+          <aside class="moment" aria-live="polite">
+            <p class="moment-kicker" id="momentDate">30 September</p>
+            <h3 id="momentTitle">Still rising</h3>
+            <p id="momentText"></p>
+            <div class="moment-dots" id="momentDots" role="group" aria-label="Jump to a key moment"></div>
+          </aside>
+        </div>
+
+        <div class="scrub">
+          <button type="button" class="play" id="growthPlay" aria-label="Play the year">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path id="growthPlayIcon" d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg>
+          </button>
+          <div class="scrub-track">
+            <input type="range" id="growthSlider" min="0" max="38" step="1" value="38" aria-label="Week of 2026">
+            <div class="scrub-months" id="growthMonths" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="chart-head">
+          <div>
+            <h3 class="chart-title">Weekly sea surface temperature anomaly, 2026</h3>
+            <p class="chart-sub">°C above the 1991–2020 average · NOAA OISST</p>
+          </div>
+          <div class="legend" id="growthLegend" role="group" aria-label="Choose a region to highlight"></div>
+        </div>
+        <div class="chart" id="growthChart"></div>
+      </div>
+    </section>
+
+    <!-- 03 COMPARE -->
+    <section class="section" id="compare" aria-labelledby="compareTitle">
+      <div class="section-head">
+        <p class="kicker">03 · The record</p>
+        <h2 id="compareTitle">By September it was already hotter than any El Niño on record has ever peaked.</h2>
+        <p class="section-lede">Every giant of the past half-century, lined up from the January it began. The shaded cone is where the forecast models say this one is heading. <b>Drag the peak</b> to ask “what if” — and see what it does to the planet's temperature.</p>
+      </div>
+
+      <div class="card compare">
+        <div class="filters">
+          <div class="seg" role="group" aria-label="Index">
+            <button type="button" class="seg-btn is-on" data-index="n34" aria-pressed="true">Niño 3.4 <small>raw ocean temperature</small></button>
+            <button type="button" class="seg-btn" data-index="roni" aria-pressed="false">Relative index <small>NOAA's official yardstick</small></button>
+          </div>
+          <div class="legend legend-toggle" id="compareLegend" role="group" aria-label="Show or hide events"></div>
+        </div>
+
+        <div class="chart-head">
+          <div>
+            <h3 class="chart-title" id="compareChartTitle">Niño 3.4 sea surface temperature anomaly</h3>
+            <p class="chart-sub" id="compareChartSub">°C, monthly · months counted from January of the year each event began</p>
+          </div>
+        </div>
+        <div class="chart" id="compareChart"></div>
+        <p class="chart-note" id="compareNote"></p>
+
+        <div class="whatif" id="whatif">
+          <div class="dial">
+            <label for="peakSlider">
+              <span>What if it peaks at…</span>
+              <output id="peakOut">4.1°C</output>
+            </label>
+            <div class="range-wrap">
+              <input type="range" id="peakSlider" min="3" max="5" step="0.05" value="4.1">
+              <div class="range-band" aria-hidden="true"><i id="peakBand"></i></div>
+              <div class="range-ticks" aria-hidden="true">
+                <span style="--p:0">Already there</span>
+                <span style="--p:55">Model average</span>
+              </div>
+            </div>
+            <p class="hint">The bright band on the slider is where 80% of model runs land (3.4–4.6°C).</p>
+          </div>
+          <div class="tiles">
+            <div class="tile">
+              <span class="t-label">Margin over the old record</span>
+              <span class="t-value" id="wiMargin">+1.4°C</span>
+              <span class="t-note" id="wiMarginNote">2015–16 peaked at 2.72°C</span>
+            </div>
+            <div class="tile">
+              <span class="t-label">Push on global temperature</span>
+              <span class="t-value" id="wiBump">≈ +0.41°C</span>
+              <span class="t-note">Rule of thumb: 0.1°C per 1°C of Niño 3.4, arriving 3–6 months after the peak</span>
+            </div>
+            <div class="tile">
+              <span class="t-label">Against the model spread</span>
+              <span class="t-value" id="wiSpread">Mid-range</span>
+              <span class="t-note" id="wiSpreadNote">Inside the band where 80% of model runs land</span>
+            </div>
+          </div>
+        </div>
+
+        <details class="table-view">
+          <summary>View the data as a table</summary>
+          <div class="table-scroll" id="compareTable"></div>
+        </details>
+      </div>
+
+      <div class="aside-grid">
+        <article class="note-card">
+          <h3>Why two yardsticks?</h3>
+          <p>The whole tropical ocean is warmer than it was in 1983, so a raw thermometer reading flatters modern events. In February 2026 NOAA switched to a <b>relative</b> index that subtracts that background warming. On it, the record to beat is 1982–83, and this event stood at +1.69°C for July–September.</p>
+        </article>
+        <article class="note-card">
+          <h3>What comes after</h3>
+          <p>Carbon Brief's central estimate puts 2026 at about 1.51°C above pre-industrial levels and <b>2027 near 1.7°C</b> — comfortably the hottest year ever measured. The UK Met Office calls a record 2027 “very likely.” The previous record, 2024, was about 1.55°C.</p>
+        </article>
+        <article class="note-card">
+          <h3>Handle with care</h3>
+          <p>“Super El Niño” is a media phrase; NOAA says “very strong.” And as Carbon Brief notes, no forecast system has ever been tested against an event this size, <b>because none has ever occurred.</b> In August the models ran about 0.3°C too warm.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 04 IMPACTS -->
+    <section class="section" id="impacts" aria-labelledby="impactsTitle">
+      <div class="section-head">
+        <p class="kicker">04 · The fallout</p>
+        <h2 id="impactsTitle">Move the Pacific's rain and you move everyone's weather.</h2>
+        <p class="section-lede">El Niño doesn't create weather so much as redistribute it — drought here, deluge there, a silent hurricane season somewhere else. Step through the seasons and tap a marker. Solid markers have already happened; ringed ones are what forecasters expect.</p>
+      </div>
+
+      <div class="card impacts">
+        <div class="filters">
+          <div class="seg seg-seasons" id="seasonSeg" role="group" aria-label="Season"></div>
+          <div class="legend legend-toggle" id="typeLegend" role="group" aria-label="Filter by kind of impact"></div>
+        </div>
+
+        <p class="season-summary" id="seasonSummary" aria-live="polite"></p>
+
+        <div class="impacts-body">
+          <div class="world-wrap">
+            <svg id="worldSvg" role="group" aria-label="World map of El Niño impacts. Use the list below the map to read every entry."></svg>
+            <div class="map-key" aria-hidden="true">
+              <span><i class="key-dot solid"></i> Reported in 2026</span>
+              <span><i class="key-dot ring"></i> Expected</span>
+            </div>
+          </div>
+          <aside class="impact-panel" id="impactPanel" aria-live="polite"></aside>
+        </div>
+
+        <div class="impact-list" id="impactList"></div>
+      </div>
+
+      <div class="ledger">
+        <div class="ledger-nums" id="ledger"></div>
+        <div class="card price-card">
+          <h3 class="chart-title">Food prices are already moving</h3>
+          <p class="chart-sub">US export prices, August 2026 vs August 2025 · FEWS NET</p>
+          <div id="priceChart" class="bars"></div>
+          <p class="chart-note">Rice is at its highest since March 2025 on El Niño worries. Global grain output is still forecast to be the second-largest on record — the shock is regional, not global.</p>
+        </div>
+      </div>
+
+      <blockquote class="pull">
+        <p>A stronger El Niño does not automatically mean a bigger impact where you live.</p>
+        <cite>The World Meteorological Organization's caution in its August 2026 update: strength in the ocean does not translate directly into the size of the impact in any one region. Everything on this map is a tilt in the odds, not a promise.</cite>
+      </blockquote>
+    </section>
+
+    <!-- SOURCES -->
+    <footer class="footer" id="sources">
+      <div class="footer-grid">
+        <div>
+          <p class="kicker">Sources &amp; method</p>
+          <h2>Where the numbers come from</h2>
+          <p>Observed values are NOAA's, copied on <span class="as-of">8 October 2026</span>. NOAA's October discussion was due the same day and is not reflected here. The event comparison uses one dataset (NOAA's monthly OISST index) for every El Niño, so like is compared with like.</p>
+          <p><b>Three things on this page are drawn, not measured:</b> the ocean-heat maps (interpolated from four regional numbers), the month-by-month forecast cone (built from published peak ranges and the decay shape of 2015–16), and the 3D “machine” (a cartoon of the physics with heights and depths stretched, not a model). Impacts marked “expected” are typical El Niño responses or agency forecasts and may not happen.</p>
+        </div>
+        <ol class="source-list" id="sourceList"></ol>
+      </div>
+      <p class="colophon">Built as an explorable explainer. Not an official forecast — for decisions, go to your national meteorological service.</p>
+    </footer>
+  </main>
+
+  <div class="tooltip" id="tooltip" role="status" hidden></div>
+
+  <script src="js/geo.js?v=2"></script>
+  <script src="js/data.js?v=2"></script>
+  <script src="js/util.js?v=2"></script>
+  <script src="js/hero.js?v=2"></script>
+  <script src="js/machine.js?v=2"></script>
+  <script src="js/machine2d.js?v=2"></script>
+  <script src="js/machine3d.js?v=2"></script>
+  <script src="js/growth.js?v=2"></script>
+  <script src="js/compare.js?v=2"></script>
+  <script src="js/impacts.js?v=2"></script>
+</body>
+</html>

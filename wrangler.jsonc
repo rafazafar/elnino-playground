@@ -1,0 +1,10 @@
+// Cloudflare deployment: a static-assets Worker served at el-nino.zafar.dev.
+// Deploy with: npm run deploy
+{
+  "name": "el-nino",
+  "account_id": "e8e4e405b53eee172786886b66ed2e93",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./dist" },
+  "routes": [{ "pattern": "el-nino.zafar.dev", "custom_domain": true }],
+  "workers_dev": false
+}

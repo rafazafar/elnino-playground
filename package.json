@@ -1,0 +1,23 @@
+{
+  "name": "elnino-playground",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Interactive playground for the 2026–27 super El Niño",
+  "scripts": {
+    "dev": "python3 -m http.server 4173",
+    "build:site": "rm -rf dist && mkdir -p dist && cp -R index.html css js dist/",
+    "deploy": "npm run build:machine && npm run build:site && cf deploy",
+    "build:geo": "node scripts/build-geo.mjs",
+    "build:machine": "esbuild src/machine3d/index.js --bundle --format=iife --minify --target=es2020 --outfile=js/machine3d.js",
+    "watch:machine": "esbuild src/machine3d/index.js --bundle --format=iife --target=es2020 --outfile=js/machine3d.js --watch"
+  },
+  "devDependencies": {
+    "cf": "^1.0.0-beta.13",
+    "d3-geo": "^3.1.1",
+    "esbuild": "^0.28.2",
+    "three": "^0.186.1",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2",
+    "wrangler": "^4.149.0"
+  }
+}
